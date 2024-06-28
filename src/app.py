@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 import mysql.connector
 
@@ -51,3 +51,27 @@ def list_events():
 def current_events():
     rec = get_db_conn().query_events(where = 'NOW() BETWEEN reg_start_date AND reg_end_date')
     return jsonify(rec)
+
+@app.post("/events/<int:event_id>/regs")
+def submit_reg(event_id):
+    data = request.form
+    insert_query = """
+    INSERT INTO service_signup (
+        fut_event_id, camp_name, camp_lead_name, camp_lead_phone, camp_lead_email,
+        submitter_name, submitter_phone, submitter_email, desired_number, desired_callerid,
+        own_phone, message
+    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+    """
+    own_phone = 1 if data.get("own_phone", "").lower() == "user-provided" else 0
+    insert_values = (
+        event_id, data.get("camp_name"), data.get("lead_name"), data.get("lead_phone"), data.get("lead_email"),
+        data.get("contact_name"), data.get("contact_phone"), data.get("contact_email"), data.get("desired_number"),
+        data.get("desired_callerid"), own_phone, data.get("message", "")
+    )
+    db_conn = get_db_conn()
+    db_conn.cursor.execute(insert_query, insert_values)
+    db_conn.connection.commit()
+    # TODO: add error handling
+    return jsonify({
+        "message": "success"
+    })
