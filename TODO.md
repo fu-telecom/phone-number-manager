@@ -1,0 +1,10 @@
+- add reg start/end dates to fut_events
+- add an endpoint to retrieve all events
+- add an endpoint to retrieve only events open for registration
+- create the reg table
+- add an endpoint to create new regs
+- update basic FE client
+- add captcha validation
+- add validation for other fields
+- add endpoint to export all regs for an event
+- separate dev/prod running - change command in Dockerfile ?
