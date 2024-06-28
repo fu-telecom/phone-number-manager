@@ -1,7 +1,10 @@
-from flask import Flask
+from flask import Flask, jsonify
+from flask_cors import CORS
 import mysql.connector
 
 app = Flask(__name__)
+CORS(app)
+
 conn = None
 
 class DBManager:
@@ -13,27 +16,38 @@ class DBManager:
             database=database,
             auth_plugin='mysql_native_password'
         )
-        self.cursor = self.connection.cursor()
+        self.cursor = self.connection.cursor(dictionary=True)
 
-    def query_events(self):
-        self.cursor.execute('SELECT title FROM fut_events')
+    def query_events(self, where = None):
+        query = 'SELECT * FROM fut_events'
+        if where is not None:
+            query += ' WHERE ' + where
+        self.cursor.execute(query)
         rec = []
         for c in self.cursor:
-            rec.append(c[0])
+            rec.append(c)
         return rec
 
 
-@app.route("/")
-def hello_world():
+def get_db_conn():
     global conn
     if not conn:
         pf = open('/run/secrets/db-password', 'r')
         password = pf.read().strip()
         pf.close()
         conn = DBManager(password=password)
-    rec = conn.query_events()
+    return conn
 
-    response = '<h1>events</h1>'
-    for c in rec:
-        response = response  + '<div>   Hello  ' + c + '</div>'
-    return response
+@app.route("/")
+def default_route():
+    return 'Invalid path', 400
+
+@app.route("/events")
+def list_events():
+    rec = get_db_conn().query_events()
+    return jsonify(rec)
+
+@app.route("/events/current")
+def current_events():
+    rec = get_db_conn().query_events(where = 'NOW() BETWEEN reg_start_date AND reg_end_date')
+    return jsonify(rec)

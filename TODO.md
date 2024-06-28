@@ -1,6 +1,3 @@
-- add reg start/end dates to fut_events
-- add an endpoint to retrieve all events
-- add an endpoint to retrieve only events open for registration
 - create the reg table
 - add an endpoint to create new regs
 - update basic FE client
