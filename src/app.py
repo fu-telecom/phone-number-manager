@@ -28,6 +28,15 @@ class DBManager:
             rec.append(c)
         return rec
 
+    def query_regs(self, event_id):
+        query = 'SELECT * FROM service_signups WHERE fut_event_id = %s'
+        values = [event_id]
+        self.cursor.execute(query, values)
+        rec = []
+        for c in self.cursor:
+            rec.append(c)
+        return rec
+
 
 def get_db_conn():
     global conn
@@ -50,6 +59,11 @@ def list_events():
 @app.route("/events/current")
 def current_events():
     rec = get_db_conn().query_events(where = 'NOW() BETWEEN reg_start_date AND reg_end_date')
+    return jsonify(rec)
+
+@app.get("/events/<int:event_id>/regs")
+def list_regs(event_id):
+    rec = get_db_conn().query_regs(event_id)
     return jsonify(rec)
 
 @app.post("/events/<int:event_id>/regs")
