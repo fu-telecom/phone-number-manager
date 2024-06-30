@@ -56,7 +56,7 @@ def current_events():
 def submit_reg(event_id):
     data = request.form
     insert_query = """
-    INSERT INTO service_signup (
+    INSERT INTO service_signups (
         fut_event_id, camp_name, camp_lead_name, camp_lead_phone, camp_lead_email,
         submitter_name, submitter_phone, submitter_email, desired_number, desired_callerid,
         own_phone, message
