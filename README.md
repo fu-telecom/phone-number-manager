@@ -3,7 +3,7 @@ A service to manage information related to Fuck You Telecom phone numbers select
 
 
 
-## Setup
+## Local Setup
 
 * create a file at private/password.txt - this will be the root password for the mysql database instance
 
@@ -17,7 +17,7 @@ A service to manage information related to Fuck You Telecom phone numbers select
 
 
 
-## Development
+## Development tips
 
 * To connect to the MySQL database via CLI:
 
@@ -31,7 +31,9 @@ A service to manage information related to Fuck You Telecom phone numbers select
 
 ### Initial setup
 
-* start up the development containers with:
+* create a file at private/password.txt - this will be the root password for the mysql database instance
+
+* start up the containers with:
 
   `docker compose up -d`
 

@@ -72,7 +72,7 @@ services:
       - frontnet
 
   certbot:
-    profiles: [prod]
+    profiles: [certbot]
     image: certbot/certbot:latest
     volumes:
       - ./certbot/www/:/var/www/certbot/:rw

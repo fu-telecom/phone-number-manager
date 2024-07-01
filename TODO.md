@@ -4,4 +4,5 @@
 - separate dev/prod running - change command in Dockerfile ?
 
 TECH DEBT:
-- add paging for GET collection endpoints (get events, regs)
+- [CODE] add paging for GET collection endpoints (get events, regs)
+- [DEVOPS] set up automatic SSL renewals https://eff-certbot.readthedocs.io/en/latest/using.html#setting-up-automated-renewal
