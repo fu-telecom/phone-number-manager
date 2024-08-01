@@ -31,7 +31,10 @@ A service to manage information related to Fuck You Telecom phone numbers select
 
 ### Initial setup
 
-* create a file at private/password.txt - this will be the root password for the mysql database instance
+* create a file at `private/password.txt` containing a random string - this will be the root password for the mysql database instance
+
+* for reCAPTCHA setup, the secret key should be saved in a file at `private/recaptcha_secret_key.txt`
+  get secret key here: [https://www.google.com/recaptcha/admin/site/706529890/settings](https://www.google.com/recaptcha/admin/site/706529890/settings)
 
 * start up the containers with:
 

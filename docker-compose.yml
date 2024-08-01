@@ -31,6 +31,7 @@ services:
     restart: always
     secrets:
       - db-password
+      - recaptcha-secret
     ports:
       - 8000:8000
     volumes:
@@ -83,6 +84,8 @@ services:
 secrets:
   db-password:
     file: private/password.txt
+  recaptcha-secret:
+    file: private/recaptcha_secret_key.txt
 
 networks:
   backnet:

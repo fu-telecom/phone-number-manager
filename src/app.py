@@ -1,6 +1,13 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+import json
 import mysql.connector
+import requests
+
+# load secrets
+with open('/run/secrets/recaptcha-secret', 'r') as file:
+    recaptcha_secret_key = file.read().strip()
+
 
 app = Flask(__name__)
 CORS(app)
@@ -47,6 +54,15 @@ def get_db_conn():
         conn = DBManager(password=password)
     return conn
 
+
+def verify_recaptcha(recaptcha_response):
+    url = 'https://www.google.com/recaptcha/api/siteverify'
+    params = {'secret': recaptcha_secret_key, 'response': recaptcha_response}
+    response = requests.post(url, params=params, verify=True)
+    data = json.loads(response.text)
+    return data['success']
+
+
 @app.route("/")
 def default_route():
     return 'Invalid path', 400
@@ -69,6 +85,11 @@ def list_regs(event_id):
 @app.post("/events/<int:event_id>/regs")
 def submit_reg(event_id):
     data = request.form
+    # validate CAPTCHA
+    recaptcha_response = data.get('g-recaptcha-response')
+    if not verify_recaptcha(recaptcha_response):
+        return jsonify({'success': False, 'message': 'Invalid reCAPTCHA'}), 400
+    # proceed with submission
     insert_query = """
     INSERT INTO service_signups (
         fut_event_id, camp_name, camp_lead_name, camp_lead_phone, camp_lead_email,
@@ -87,5 +108,6 @@ def submit_reg(event_id):
     db_conn.connection.commit()
     # TODO: add error handling
     return jsonify({
+        "success": True,
         "message": "success"
     })

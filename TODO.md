@@ -1,5 +1,5 @@
-- add captcha validation
 - add validation for other fields (phone #, caller ID)
+- need a different Dockerfile for prod, without --debug and with different ENV
 - review other TODO in code
 
 TECH DEBT:
