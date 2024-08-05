@@ -197,9 +197,11 @@ def submit_reg(event_id):
     invalid_reasons = []
 
     # validate CAPTCHA
-    recaptcha_response = data.get('g-recaptcha-response')
-    if not verify_recaptcha(recaptcha_response):
-        invalid_reasons.append('Invalid reCAPTCHA')
+    NOCAPTCHA_MODE = False  # Toggle to suppress CAPTCHA validation
+    if not NOCAPTCHA_MODE:
+        recaptcha_response = data.get('g-recaptcha-response')
+        if not verify_recaptcha(recaptcha_response):
+            invalid_reasons.append('Invalid reCAPTCHA')
 
     # validate desired caller ID
     desired_caller_id = data.get("desired_callerid")
